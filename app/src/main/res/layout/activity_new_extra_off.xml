@@ -173,7 +173,7 @@
         android:layout_height="40dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorAccent"
         android:onClick="onClick"
         android:text="新增"
         android:textColor="@color/colorLight"

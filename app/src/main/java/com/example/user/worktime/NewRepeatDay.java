@@ -5,12 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +29,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NewRepeatDay extends AppCompatActivity{
+public class NewRepeatDay extends AppCompatActivity {
     EditText edittxtLabel,edittxtWage,edittxtHour;
     TextView textviewDayNum;
     CalendarPickerView calendarView2;
+    int dayCount=0;
+    boolean selectedDays[] = new boolean[7]; // Sun , Mon , Tue , ... , Sat !
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +95,7 @@ public class NewRepeatDay extends AppCompatActivity{
 //        calendarView2.setOnDateSelectedListener(this);
     }
 
+    // onClick for Button
     public void addNewRepeat(View v){
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference("RepeatDays");
@@ -118,14 +124,75 @@ public class NewRepeatDay extends AppCompatActivity{
         newRDay.put("Hour",temp);
 
         temp = textviewDayNum.getText().toString();
-        if (temp.isEmpty()){
+        if (temp=="0"){
             Toast.makeText(this,"請輸入天數！",Toast.LENGTH_SHORT).show();
             return;
         }
         newRDay.put("Days",temp);
 
+        for(int i=0;i<7;i++)
+            if (selectedDays[i]) temp += String.format(" %d",1);
+            else temp += String.format(" %d",0);
+        newRDay.put("SelectedDays",temp);
+
         mDatabase.push().setValue(newRDay);
         finish();
     }
 
+    public void onCheckBoxClicked(View v){
+        int dayOfWeek=0;
+        switch (v.getId()){
+            case R.id.Monday:
+                dayOfWeek=2;
+                break;
+            case R.id.Tuesday:
+                dayOfWeek=3;
+                break;
+            case R.id.Wednesday:
+                dayOfWeek=4;
+                break;
+            case R.id.Thursday:
+                dayOfWeek=5;
+                break;
+            case R.id.Friday:
+                dayOfWeek=6;
+                break;
+            case R.id.Saturday:
+                dayOfWeek=7;
+                break;
+            case R.id.Sunday:
+                dayOfWeek=1;
+                break;
+        }
+        if (((CheckBox)v).isChecked()) {
+            checkDays(dayOfWeek);
+        }
+        else
+            uncheckDays(dayOfWeek);
+    }
+
+    void checkDays(int dayOfWeek){
+        selectedDays[dayOfWeek-1] = true;
+        Calendar date = Calendar.getInstance();
+        int MAX = date.getActualMaximum(Calendar.DAY_OF_MONTH);
+        for(int i=1;i<=MAX;i++) {
+            date.set(Calendar.DAY_OF_MONTH,i);
+            if(date.get(Calendar.DAY_OF_WEEK)==dayOfWeek)
+            {
+                calendarView2.selectDate(date.getTime());
+                dayCount++;
+            }
+        }
+        textviewDayNum.setText(String.valueOf(dayCount));
+    }
+
+    void uncheckDays(int dayOfWeek){
+        selectedDays[dayOfWeek-1] = false;
+        initCalendar();
+        dayCount = 0;
+        for(int i=0;i<7;i++)
+            if (selectedDays[i])
+                checkDays(i+1);
+        textviewDayNum.setText(String.valueOf(dayCount));
+    }
 }

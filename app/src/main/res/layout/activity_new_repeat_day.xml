@@ -192,60 +192,68 @@
         app:layout_constraintVertical_bias="0.0">
 
         <CheckBox
-            android:id="@+id/CheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="一"
-            android:textColor="@color/colorPrimary" />
-
-        <CheckBox
-            android:id="@+id/CheckBox2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="二"
-            android:textColor="@color/colorPrimary" />
-
-        <CheckBox
-            android:id="@+id/CheckBox3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="三"
-            android:textColor="@color/colorPrimary" />
-
-        <CheckBox
-            android:id="@+id/CheckBox4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="四"
-            android:textColor="@color/colorPrimary" />
-
-        <CheckBox
-            android:id="@+id/CheckBox5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="五"
-            android:textColor="@color/colorPrimary" />
-
-        <CheckBox
-            android:id="@+id/CheckBox6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="六"
-            android:textColor="@color/colorPrimary" />
-
-        <CheckBox
-            android:id="@+id/CheckBox7"
+            android:id="@+id/Sunday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="日"
+            android:onClick="onCheckBoxClicked"
             android:textColor="@color/colorPrimary" />
+
+        <CheckBox
+            android:id="@+id/Monday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="一"
+            android:onClick="onCheckBoxClicked"
+            android:textColor="@color/colorPrimary" />
+
+        <CheckBox
+            android:id="@+id/Tuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="二"
+            android:onClick="onCheckBoxClicked"
+            android:textColor="@color/colorPrimary" />
+
+        <CheckBox
+            android:id="@+id/Wednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="三"
+            android:onClick="onCheckBoxClicked"
+            android:textColor="@color/colorPrimary" />
+
+        <CheckBox
+            android:id="@+id/Thursday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="四"
+            android:onClick="onCheckBoxClicked"
+            android:textColor="@color/colorPrimary" />
+
+        <CheckBox
+            android:id="@+id/Friday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="五"
+            android:onClick="onCheckBoxClicked"
+            android:textColor="@color/colorPrimary" />
+
+        <CheckBox
+            android:id="@+id/Saturday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="六"
+            android:onClick="onCheckBoxClicked"
+            android:textColor="@color/colorPrimary" />
+
     </LinearLayout>
 
     <Button
@@ -256,7 +264,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorAccent"
         android:onClick="addNewRepeat"
         android:text="新增"
         android:textColor="@color/colorLight"

@@ -107,7 +107,7 @@ public class viewDetail extends AppCompatActivity
                 String toAdd="";
                 for (DataSnapshot ds : dataSnapshot.getChildren()){
                     key.add(ds.getKey());
-                    toAdd += "日期：" + ds.child("Date").getValue().toString() + "，" + ds.child("Label").getValue().toString() + "\n\t\t"
+                    toAdd += ds.child("Label").getValue().toString() + "，" + "天數：" + ds.child("Days").getValue().toString() + "\n\t\t"
                             + "時數：" + ds.child("Hour").getValue().toString() + "小時，\t\t"
                             + "時薪：" + ds.child("Wage").getValue().toString() + "元";
 
@@ -141,7 +141,7 @@ public class viewDetail extends AppCompatActivity
                 String toAdd="";
                 for (DataSnapshot ds : dataSnapshot.getChildren()){
                     key.add(ds.getKey());
-                    toAdd += "日期：" + ds.child("Date").getValue().toString() + "，" + ds.child("Label").getValue().toString() + "\n\t\t"
+                    toAdd += ds.child("Label").getValue().toString() + "，" + "天數：" + ds.child("Days").getValue().toString() + "\n\t\t"
                             + "時數：" + ds.child("Hour").getValue().toString() + "小時，\t\t"
                             + "時薪：" + ds.child("Wage").getValue().toString() + "元";
 
@@ -216,7 +216,7 @@ public class viewDetail extends AppCompatActivity
             startActivity(it);
         } else
         {
-            it = new Intent(this,NewRepeatDay.class);
+            it = new Intent(this,NewExtraOff.class);
             it.putExtra("dbRef",dbRef);
             startActivity(it);
         }

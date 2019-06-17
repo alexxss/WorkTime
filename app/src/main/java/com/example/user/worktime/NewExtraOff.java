@@ -142,7 +142,7 @@ public class NewExtraOff extends AppCompatActivity implements CalendarPickerView
         newRDay.put("Hour",temp);
 
         temp = txtvSelectDate.getText().toString();
-        if(temp == "0") {
+        if(numDays==0) {
             Toast.makeText(this,"請選擇日期！",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -151,8 +151,8 @@ public class NewExtraOff extends AppCompatActivity implements CalendarPickerView
 //        newRDay.put("SelectedDays",St)
         temp = "";
         for(int i=0;i<31;i++)
-            if(selectedDays[i])temp+=String.format("%i",1);
-            else temp+=String.format("%i",0);
+            if(selectedDays[i])temp+=String.format("%d",1);
+            else temp+=String.format("%d",0);
 
         newRDay.put("SelectedDays",temp);
 
