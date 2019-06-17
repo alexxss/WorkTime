@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements AlertDialog.OnClickListener{
     TextView ExtraMoney,TotalMoney,OffMoney;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         final int[] rsum = { 0 };
         final int[] total = { 0 };
         DatabaseReference mDatabase;
+        Calendar date = Calendar.getInstance();
+
         mDatabase = FirebaseDatabase.getInstance().getReference("Extradays");
         ValueEventListener valueEventListener = mDatabase.addValueEventListener(new ValueEventListener() {
             @Override

@@ -29,12 +29,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NewRepeatDay extends AppCompatActivity {
+public class NewRepeatDay extends AppCompatActivity implements CalendarPickerView.OnDateSelectedListener {
     EditText edittxtLabel,edittxtWage,edittxtHour;
     TextView textviewDayNum;
     CalendarPickerView calendarView2;
     int dayCount=0;
-    boolean selectedDays[] = new boolean[7]; // Sun , Mon , Tue , ... , Sat !
+    boolean selectedDays[] = new boolean[31]; // Sun , Mon , Tue , ... , Sat !
+    boolean selectedWeekdays[] = new boolean[7];
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,8 @@ public class NewRepeatDay extends AppCompatActivity {
             }
         });
 
+        for (int i=0;i<31;i++) selectedDays[i]=false;
+        for(int i=0;i<7;i++) selectedWeekdays[i]=false;
     }
 
     // initialize calendar
@@ -92,7 +97,7 @@ public class NewRepeatDay extends AppCompatActivity {
 //        date.setTime(month_begin.getTime());
         calendarView2.init(month_begin.getTime(), month_end.getTime())
                 .inMode(CalendarPickerView.SelectionMode.MULTIPLE);
-//        calendarView2.setOnDateSelectedListener(this);
+        calendarView2.setOnDateSelectedListener(this);
     }
 
     // onClick for Button
@@ -130,10 +135,14 @@ public class NewRepeatDay extends AppCompatActivity {
         }
         newRDay.put("Days",temp);
 
-        for(int i=0;i<7;i++)
-            if (selectedDays[i]) temp += String.format(" %d",1);
-            else temp += String.format(" %d",0);
-        newRDay.put("SelectedDays",temp);
+        temp = "";
+        for(int i=0;i<31;i++)
+            if(selectedDays[i])temp+=String.format("%d",1);
+            else temp+=String.format("%d",0);
+
+        newRDay.put("SelectedDays",selectedDays);
+
+//        Log.d("datelog",String.valueOf(boolean b = Boolean.));
 
         mDatabase.push().setValue(newRDay);
         finish();
@@ -172,7 +181,7 @@ public class NewRepeatDay extends AppCompatActivity {
     }
 
     void checkDays(int dayOfWeek){
-        selectedDays[dayOfWeek-1] = true;
+        selectedWeekdays[dayOfWeek-1] = true;
         Calendar date = Calendar.getInstance();
         int MAX = date.getActualMaximum(Calendar.DAY_OF_MONTH);
         for(int i=1;i<=MAX;i++) {
@@ -180,19 +189,57 @@ public class NewRepeatDay extends AppCompatActivity {
             if(date.get(Calendar.DAY_OF_WEEK)==dayOfWeek)
             {
                 calendarView2.selectDate(date.getTime());
-                dayCount++;
+                if(!selectedDays[i-1]) dayCount++; // only count if not yet selected before
+                selectedDays[i-1] = true;
             }
         }
         textviewDayNum.setText(String.valueOf(dayCount));
     }
 
     void uncheckDays(int dayOfWeek){
-        selectedDays[dayOfWeek-1] = false;
+        // update array
+        selectedWeekdays[dayOfWeek-1] = false;
+        // clear calendar
         initCalendar();
+        // re-select days
         dayCount = 0;
-        for(int i=0;i<7;i++)
-            if (selectedDays[i])
-                checkDays(i+1);
+        Calendar c = Calendar.getInstance();
+        for(int i=0;i<31;i++) {
+            if (selectedDays[i]){
+//            Log.d("datelog",String.format(" dayofweek=%d",dayOfWeek));
+                c.set(Calendar.DAY_OF_MONTH,i+1);
+//                Log.d("datelog",String.format("Calendar.DAY_OF_WEEK=%d",c.get(Calendar.DAY_OF_WEEK)));
+                if(c.get(Calendar.DAY_OF_WEEK)!=dayOfWeek) {
+                    calendarView2.selectDate(c.getTime());
+                    dayCount++;
+                }
+                else selectedDays[i] = false;
+            }
+        }
         textviewDayNum.setText(String.valueOf(dayCount));
+    }
+
+    @Override
+    public void onDateSelected(Date date) {
+        // get dayOfMonth
+        Calendar selectedDay = Calendar.getInstance();
+        selectedDay.setTime(date);
+        int day = selectedDay.get(Calendar.DAY_OF_MONTH);
+        // update textview
+        textviewDayNum.setText(String.valueOf(++dayCount));
+        // update array
+        selectedDays[day-1] = true;
+    }
+
+    @Override
+    public void onDateUnselected(Date date) {
+        // get dayOfMonth
+        Calendar selectedDay = Calendar.getInstance();
+        selectedDay.setTime(date);
+        int day = selectedDay.get(Calendar.DAY_OF_MONTH);
+        // update array
+        selectedDays[day-1] = false;
+        // update textview
+        textviewDayNum.setText(String.valueOf(--dayCount));
     }
 }
