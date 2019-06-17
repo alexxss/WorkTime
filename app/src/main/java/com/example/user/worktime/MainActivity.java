@@ -99,12 +99,12 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         ValueEventListener valueEventListener1 = mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int days, hours, wage;
+                int wage;
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
-                    days = Integer.valueOf(ds.child("Days").getValue().toString());
-                    hours = Integer.valueOf(ds.child("Hour").getValue().toString());
+//                    days = Integer.valueOf(ds.child("Days").getValue().toString());
+//                    hours = Integer.valueOf(ds.child("Hour").getValue().toString());
                     wage = Integer.valueOf(ds.child("Wage").getValue().toString());
-                    offsum[0] += (days*hours*wage);
+                    offsum[0] += (wage);
                 }
                 OffMoney.setText(String.valueOf(offsum[0]));
             }

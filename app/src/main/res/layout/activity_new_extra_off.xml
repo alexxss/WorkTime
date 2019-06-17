@@ -39,20 +39,16 @@
 
     <TextView
         android:id="@+id/txtvSelectDate"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:gravity="top|bottom"
+        android:gravity="bottom|end"
         android:text="0"
         android:textAlignment="textEnd"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="@+id/edittxtHour"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="@+id/edittxtHour"
         app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <TextView
@@ -61,7 +57,7 @@
         android:layout_height="40dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:gravity="top|bottom"
+        android:gravity="center_vertical|bottom"
         android:text="天數："
         android:textColor="@color/colorPrimary"
         app:layout_constraintHorizontal_bias="0.582"
@@ -73,6 +69,8 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:gravity="top|bottom"
         android:text="小時"
         android:textColor="@color/colorPrimary"
@@ -83,6 +81,7 @@
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
         android:gravity="top|bottom"
         android:text="元"
         android:textColor="@color/colorPrimary"
@@ -95,7 +94,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="24dp"
         android:gravity="top|bottom"
-        android:text="時薪："
+        android:text="扣薪："
         android:textColor="@color/colorPrimary"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txtvLabel"
@@ -126,32 +125,29 @@
         app:layout_constraintLeft_toRightOf="@+id/txtvLabel"
         app:layout_constraintTop_toTopOf="@+id/txtvLabel" />
 
-    <EditText
+    <TextView
         android:id="@+id/edittxtWage"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:ems="10"
-        android:hint="150"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorHint"
-        app:layout_constraintLeft_toRightOf="@+id/textView8"
-        app:layout_constraintTop_toTopOf="@+id/textView8" />
-
-    <EditText
-        android:id="@+id/edittxtHour"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:ems="10"
-        android:hint="4"
-        android:inputType="number"
-        android:textAlignment="center"
+        android:gravity="top|bottom|end"
+        android:text="0"
         android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorHint"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/textView8"
+        app:layout_constraintTop_toTopOf="@+id/textView8" />
+
+    <TextView
+        android:id="@+id/edittxtHour"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:gravity="top|bottom|end"
+        android:text="0"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="@+id/textView5" />
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -17,24 +18,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NewExtraOff extends AppCompatActivity implements CalendarPickerView.OnDateSelectedListener{
     CalendarPickerView calendarView2;
-    EditText edittxtLabel, edittxtWage, edittxtHour;
-    TextView txtvSelectDate,txtvTitle;
+    EditText edittxtLabel;
+    TextView txtvSelectDate,txtvTitle, edittxtWage, edittxtHour;
     String dbRef;
     int numDays = 0;
-    boolean selectedDays[] = new boolean[31];
+    List<Boolean> selectedDays = new ArrayList<Boolean>(Arrays.asList(new Boolean[31]));
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +73,8 @@ public class NewExtraOff extends AppCompatActivity implements CalendarPickerView
 //        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         //txtvSelectDate.setText(sdf.format(new Date(calendarView2.getDate())).toString());
 
-        edittxtHour = (EditText) findViewById(R.id.edittxtHour);
-        edittxtWage = (EditText) findViewById(R.id.edittxtWage);
+        edittxtHour = (TextView) findViewById(R.id.edittxtHour);
+        edittxtWage = (TextView) findViewById(R.id.edittxtWage);
         edittxtLabel = (EditText) findViewById(R.id.edittxtLabel);
         edittxtLabel.addTextChangedListener(new TextWatcher() {
             @Override
@@ -90,7 +98,7 @@ public class NewExtraOff extends AppCompatActivity implements CalendarPickerView
             }
         });
 
-        for(int i=0;i<31;i++) selectedDays[i]=false;
+        Collections.fill(selectedDays,Boolean.FALSE);
     }
 
     // initialize calendar
@@ -151,10 +159,10 @@ public class NewExtraOff extends AppCompatActivity implements CalendarPickerView
 //        newRDay.put("SelectedDays",St)
         temp = "";
         for(int i=0;i<31;i++)
-            if(selectedDays[i])temp+=String.format("%d",1);
+            if(selectedDays.get(i))temp+=String.format("%d",1);
             else temp+=String.format("%d",0);
 
-        newRDay.put("SelectedDays",temp);
+        newRDay.put("SelectedDays",selectedDays);
 
         mDatabase.push().setValue(newRDay);
         finish();
@@ -163,11 +171,14 @@ public class NewExtraOff extends AppCompatActivity implements CalendarPickerView
     // when date selected: update array, update text view
     @Override
     public void onDateSelected(Date date) {
+        // get Day_Of_Month
         Calendar selectedDay = Calendar.getInstance();
         selectedDay.setTime(date);
         int day = selectedDay.get(Calendar.DAY_OF_MONTH);
-        selectedDays[day] = true;
+        selectedDays.set(day-1,true);
         txtvSelectDate.setText(String.valueOf(++numDays));
+        // calculate wage & hour?
+        updateWageAndHour(day-1);
     }
 
     // when date unselected: update array, update text view
@@ -176,8 +187,78 @@ public class NewExtraOff extends AppCompatActivity implements CalendarPickerView
         Calendar selectedDay = Calendar.getInstance();
         selectedDay.setTime(date);
         int day = selectedDay.get(Calendar.DAY_OF_MONTH);
-        selectedDays[day] = false;
+        selectedDays.set(day-1,false);
         txtvSelectDate.setText(String.valueOf(--numDays));
+        // subtract wage & hour
+        subtractWageAndHour(day-1);
+    }
+
+    public void updateWageAndHour(final int day){
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference("RepeatDays");
+        ValueEventListener valueEventListener2 = mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int hour = 0, wage = 0,rsum,hoursum;
+                if(!edittxtWage.getText().toString().isEmpty())
+                    rsum=Integer.valueOf(edittxtWage.getText().toString());
+                else rsum = 0;
+                if (!edittxtHour.getText().toString().isEmpty())
+                    hoursum=Integer.valueOf(edittxtHour.getText().toString());
+                else hoursum = 0;
+
+                GenericTypeIndicator<List<Boolean>> t = new GenericTypeIndicator<List<Boolean>>() {};
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    hour = Integer.valueOf(ds.child("Hour").getValue().toString());
+                    wage = Integer.valueOf(ds.child("Wage").getValue().toString());
+                    List<Boolean> eventDays = ds.child("SelectedDays").getValue(t);
+                    if(eventDays.get(day)){
+                        rsum += (hour*wage);
+                        hoursum += hour;
+                        edittxtWage.setText(String.valueOf(rsum));
+                        edittxtHour.setText(String.valueOf(hoursum));
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void subtractWageAndHour(final int day){
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference("RepeatDays");
+        ValueEventListener valueEventListener2 = mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int hour = 0, wage = 0,rsum,hoursum;
+                if(!edittxtWage.getText().toString().isEmpty())
+                    rsum=Integer.valueOf(edittxtWage.getText().toString());
+                else rsum = 0;
+                if (!edittxtHour.getText().toString().isEmpty())
+                    hoursum=Integer.valueOf(edittxtHour.getText().toString());
+                else hoursum = 0;
+
+                GenericTypeIndicator<List<Boolean>> t = new GenericTypeIndicator<List<Boolean>>() {};
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    hour = Integer.valueOf(ds.child("Hour").getValue().toString());
+                    wage = Integer.valueOf(ds.child("Wage").getValue().toString());
+                    List<Boolean> eventDays = ds.child("SelectedDays").getValue(t);
+                    if(eventDays.get(day)){
+                        rsum -= (hour*wage);
+                        hoursum -= hour;
+                        edittxtWage.setText(String.valueOf(rsum));
+                        edittxtHour.setText(String.valueOf(hoursum));
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
