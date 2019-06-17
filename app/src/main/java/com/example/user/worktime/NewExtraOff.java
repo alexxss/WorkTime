@@ -7,7 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,36 +19,51 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.timessquare.CalendarPickerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NewExtraOff extends AppCompatActivity implements CalendarView.OnDateChangeListener{
-    CalendarView calendarView2;
+public class NewExtraOff extends AppCompatActivity implements CalendarPickerView.OnDateSelectedListener{
+    CalendarPickerView calendarView2;
     EditText edittxtLabel, edittxtWage, edittxtHour;
     TextView txtvSelectDate,txtvTitle;
     String dbRef;
+    int numDays = 0;
+    boolean selectedDays[] = new boolean[31];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // HIDE TITLE
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getSupportActionBar().hide();
         setContentView(R.layout.activity_new_extra_off);
+
+        // PREVENT KEYBOARD AUTO POP-UP
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         txtvTitle = (TextView) findViewById(R.id.txtvTitle);
 
         Intent it = getIntent();
-        String title = it.getStringExtra("title");
-        txtvTitle.setText(title);
+//        String title = it.getStringExtra("title");
+//        txtvTitle.setText(title);
         dbRef = it.getStringExtra("dbRef");
+        if(dbRef == "ExtraDays") txtvTitle.setText("新增加班");
+        else if (dbRef == "OffDays") txtvTitle.setText("新增請假");
 
-        calendarView2 = (CalendarView) findViewById(R.id.calendarView2);
-        calendarView2.setOnDateChangeListener(this);
+        calendarView2 = (CalendarPickerView) findViewById(R.id.calendarView2);
+        ViewGroup.LayoutParams layout = calendarView2.getLayoutParams();
+        layout.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        calendarView2.setLayoutParams(layout);
+        initCalendar();
 
         txtvSelectDate = (TextView) findViewById(R.id.txtvSelectDate);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        txtvSelectDate.setText(sdf.format(new Date(calendarView2.getDate())).toString());
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        //txtvSelectDate.setText(sdf.format(new Date(calendarView2.getDate())).toString());
 
         edittxtHour = (EditText) findViewById(R.id.edittxtHour);
         edittxtWage = (EditText) findViewById(R.id.edittxtWage);
@@ -71,15 +90,28 @@ public class NewExtraOff extends AppCompatActivity implements CalendarView.OnDat
             }
         });
 
-
+        for(int i=0;i<31;i++) selectedDays[i]=false;
     }
 
-    @Override
-    public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-        String selectDate = String.valueOf(dayOfMonth) + "/" + String.valueOf(month+1) + "/" + String.valueOf(year);
-        txtvSelectDate.setText(selectDate);
+    // initialize calendar
+    void initCalendar(){
+        Calendar month_end = Calendar.getInstance();
+        //month_end.set(Calendar.HOUR_OF_DAY,1);
+        month_end.set(Calendar.DAY_OF_MONTH, month_end.getActualMaximum(Calendar.DAY_OF_MONTH));
+        month_end.add(Calendar.DAY_OF_YEAR,1);
+        Calendar month_begin = Calendar.getInstance();
+        month_begin.set(Calendar.DAY_OF_MONTH,month_begin.getActualMinimum(Calendar.DAY_OF_MONTH));
+//        Date date = new Date();
+//        date.setTime(month_begin.getTime());
+//        Log.d("datetag!!",String.valueOf(month_begin.getTime()));
+//        Log.d("datetag!!",String.valueOf(date));
+//        Log.d("datetag!!",String.valueOf(month_end.getTime()));
+        calendarView2.init(month_begin.getTime(), month_end.getTime())
+                .inMode(CalendarPickerView.SelectionMode.MULTIPLE);
+        calendarView2.setOnDateSelectedListener(this);
     }
 
+    // onClick for button
     public void onClick(View v){
    //     Toast.makeText(this,dbRef,Toast.LENGTH_SHORT).show();
 
@@ -110,9 +142,42 @@ public class NewExtraOff extends AppCompatActivity implements CalendarView.OnDat
         newRDay.put("Hour",temp);
 
         temp = txtvSelectDate.getText().toString();
-        newRDay.put("Date",temp);
+        if(temp == "0") {
+            Toast.makeText(this,"請選擇日期！",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        newRDay.put("Days",temp);
+
+//        newRDay.put("SelectedDays",St)
+        temp = "";
+        for(int i=0;i<31;i++)
+            if(selectedDays[i])temp+=String.format("%i",1);
+            else temp+=String.format("%i",0);
+
+        newRDay.put("SelectedDays",temp);
 
         mDatabase.push().setValue(newRDay);
         finish();
     }
+
+    // when date selected: update array, update text view
+    @Override
+    public void onDateSelected(Date date) {
+        Calendar selectedDay = Calendar.getInstance();
+        selectedDay.setTime(date);
+        int day = selectedDay.get(Calendar.DAY_OF_MONTH);
+        selectedDays[day] = true;
+        txtvSelectDate.setText(String.valueOf(++numDays));
+    }
+
+    // when date unselected: update array, update text view
+    @Override
+    public void onDateUnselected(Date date) {
+        Calendar selectedDay = Calendar.getInstance();
+        selectedDay.setTime(date);
+        int day = selectedDay.get(Calendar.DAY_OF_MONTH);
+        selectedDays[day] = false;
+        txtvSelectDate.setText(String.valueOf(--numDays));
+    }
+
 }

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         calculateWage();
     }
 
+    // UNUSED FUNCTION
     public void CountTotal(){
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference("RepeatDays");
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
             }
         });
     }
+
+    // CALCULATE TOTAL WAGE TO DISPLAY
     public void calculateWage(){
         final int[] extrasum = {0};
         final int[] offsum = { 0 };
@@ -73,11 +76,12 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         ValueEventListener valueEventListener = mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int days,wage;
+                int days,hours,wage;
                 for (DataSnapshot ds : dataSnapshot.getChildren()){
-                    days = Integer.valueOf(ds.child("Hour").getValue().toString());
+                    days = Integer.valueOf(ds.child("Days").getValue().toString());
+                    hours = Integer.valueOf(ds.child("Hour").getValue().toString());
                     wage = Integer.valueOf(ds.child("Wage").getValue().toString());
-                    extrasum[0] += (days*wage);
+                    extrasum[0] += (days*hours*wage);
                 }
                 ExtraMoney.setText(String.valueOf(extrasum[0]));
             }
@@ -92,11 +96,12 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         ValueEventListener valueEventListener1 = mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int days, wage;
+                int days, hours, wage;
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
-                    days = Integer.valueOf(ds.child("Hour").getValue().toString());
+                    days = Integer.valueOf(ds.child("Days").getValue().toString());
+                    hours = Integer.valueOf(ds.child("Hour").getValue().toString());
                     wage = Integer.valueOf(ds.child("Wage").getValue().toString());
-                    offsum[0] += (days*wage);
+                    offsum[0] += (days*hours*wage);
                 }
                 OffMoney.setText(String.valueOf(offsum[0]));
             }

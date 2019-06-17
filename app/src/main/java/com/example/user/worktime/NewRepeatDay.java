@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,22 +16,38 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.timessquare.CalendarPickerView;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class NewRepeatDay extends AppCompatActivity{
-    EditText edittxtLabel,edittxtDays,edittxtWage,edittxtHour;
-    CalendarView calendarView2;
+    EditText edittxtLabel,edittxtWage,edittxtHour;
+    TextView textviewDayNum;
+    CalendarPickerView calendarView2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // HIDE TITLE
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getSupportActionBar().hide();
         setContentView(R.layout.activity_new_repeat_day);
 
-        calendarView2 = (CalendarView) findViewById(R.id.calendarView2);
-        edittxtDays = (EditText) findViewById(R.id.edittxtDays);
+        // PREVENT KEYBOARD AUTO POP-UP
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        calendarView2 = (CalendarPickerView) findViewById(R.id.calendarView2);
+        ViewGroup.LayoutParams layout = calendarView2.getLayoutParams();
+        layout.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        calendarView2.setLayoutParams(layout);
+        initCalendar();
+
+        textviewDayNum = (TextView) findViewById(R.id.txtviewDayNum);
         edittxtHour = (EditText) findViewById(R.id.edittxtHour);
         edittxtWage = (EditText) findViewById(R.id.edittxtWage);
         edittxtLabel = (EditText) findViewById(R.id.edittxtLabel);
@@ -54,6 +73,21 @@ public class NewRepeatDay extends AppCompatActivity{
             }
         });
 
+    }
+
+    // initialize calendar
+    void initCalendar(){
+        Calendar month_end = Calendar.getInstance();
+        //month_end.set(Calendar.HOUR_OF_DAY,1);
+        month_end.set(Calendar.DAY_OF_MONTH, month_end.getActualMaximum(Calendar.DAY_OF_MONTH));
+        month_end.add(Calendar.DAY_OF_YEAR,1);
+        Calendar month_begin = Calendar.getInstance();
+        month_begin.set(Calendar.DAY_OF_MONTH,month_begin.getActualMinimum(Calendar.DAY_OF_MONTH));
+//        Date date = new Date();
+//        date.setTime(month_begin.getTime());
+        calendarView2.init(month_begin.getTime(), month_end.getTime())
+                .inMode(CalendarPickerView.SelectionMode.MULTIPLE);
+//        calendarView2.setOnDateSelectedListener(this);
     }
 
     public void addNewRepeat(View v){
@@ -83,7 +117,7 @@ public class NewRepeatDay extends AppCompatActivity{
         }
         newRDay.put("Hour",temp);
 
-        temp = edittxtDays.getText().toString();
+        temp = textviewDayNum.getText().toString();
         if (temp.isEmpty()){
             Toast.makeText(this,"請輸入天數！",Toast.LENGTH_SHORT).show();
             return;

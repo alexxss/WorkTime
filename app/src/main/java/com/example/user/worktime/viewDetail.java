@@ -206,4 +206,19 @@ public class viewDetail extends AppCompatActivity
             onResume();
         }
     }
+
+    public void newEntry(View v){
+        Intent it;
+        if (dbRef == "RepeatDays") {
+            it = new Intent(this,NewRepeatDay.class);
+            it.putExtra("type","repeat");
+            it.putExtra("dbRef",dbRef);
+            startActivity(it);
+        } else
+        {
+            it = new Intent(this,NewRepeatDay.class);
+            it.putExtra("dbRef",dbRef);
+            startActivity(it);
+        }
+    }
 }
