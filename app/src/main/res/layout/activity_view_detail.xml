@@ -44,25 +44,25 @@
             android:layout_weight="1"
             android:backgroundTint="@color/colorPrimary"
             android:onClick="viewRepeatDetail"
-            android:text=" 排班詳情"
+            android:text=" 工作詳情"
             android:textColor="@color/colorLight" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        <!--<Space-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1" />-->
 
-        <Button
-            android:id="@+id/viewExtra"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorPrimary"
-            android:onClick="viewExtraDetail"
-            android:text="加班詳情"
-            android:textColor="@color/colorLight"
-            tools:layout_editor_absoluteX="-4dp"
-            tools:layout_editor_absoluteY="403dp" />
+        <!--<Button-->
+            <!--android:id="@+id/viewExtra"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:backgroundTint="@color/colorPrimary"-->
+            <!--android:onClick="viewExtraDetail"-->
+            <!--android:text="加班詳情"-->
+            <!--android:textColor="@color/colorLight"-->
+            <!--tools:layout_editor_absoluteX="-4dp"-->
+            <!--tools:layout_editor_absoluteY="403dp" />-->
 
         <Space
             android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginRight="8dp"
-        android:text="排班詳情"
+        android:text="工作詳情"
         android:textColor="@color/colorAccent"
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"

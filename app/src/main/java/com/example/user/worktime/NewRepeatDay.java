@@ -24,9 +24,13 @@ import com.squareup.timessquare.CalendarPickerView;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NewRepeatDay extends AppCompatActivity implements CalendarPickerView.OnDateSelectedListener {
@@ -34,9 +38,8 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
     TextView textviewDayNum;
     CalendarPickerView calendarView2;
     int dayCount=0;
-    boolean selectedDays[] = new boolean[31]; // Sun , Mon , Tue , ... , Sat !
-    boolean selectedWeekdays[] = new boolean[7];
-
+    List<Boolean> selectedDays = new ArrayList<Boolean>(Arrays.asList(new Boolean[31]));
+    List<Boolean> selectedWeekdays = new ArrayList<Boolean>(Arrays.asList(new Boolean[7])); // Sun , Mon , Tue , ... , Sat !
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +84,8 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
             }
         });
 
-        for (int i=0;i<31;i++) selectedDays[i]=false;
-        for(int i=0;i<7;i++) selectedWeekdays[i]=false;
+        Collections.fill(selectedDays,Boolean.FALSE);
+        Collections.fill(selectedWeekdays,Boolean.FALSE);
     }
 
     // initialize calendar
@@ -137,7 +140,7 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
 
         temp = "";
         for(int i=0;i<31;i++)
-            if(selectedDays[i])temp+=String.format("%d",1);
+            if(selectedDays.get(i))temp+=String.format("%d",1);
             else temp+=String.format("%d",0);
 
         newRDay.put("SelectedDays",selectedDays);
@@ -181,7 +184,7 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
     }
 
     void checkDays(int dayOfWeek){
-        selectedWeekdays[dayOfWeek-1] = true;
+        selectedWeekdays.set(dayOfWeek-1,true);
         Calendar date = Calendar.getInstance();
         int MAX = date.getActualMaximum(Calendar.DAY_OF_MONTH);
         for(int i=1;i<=MAX;i++) {
@@ -189,8 +192,8 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
             if(date.get(Calendar.DAY_OF_WEEK)==dayOfWeek)
             {
                 calendarView2.selectDate(date.getTime());
-                if(!selectedDays[i-1]) dayCount++; // only count if not yet selected before
-                selectedDays[i-1] = true;
+                if(!selectedDays.get(i-1)) dayCount++; // only count if not yet selected before
+                selectedDays.set(i-1,true);
             }
         }
         textviewDayNum.setText(String.valueOf(dayCount));
@@ -198,14 +201,14 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
 
     void uncheckDays(int dayOfWeek){
         // update array
-        selectedWeekdays[dayOfWeek-1] = false;
+        selectedWeekdays.set(dayOfWeek-1,false);
         // clear calendar
         initCalendar();
         // re-select days
         dayCount = 0;
         Calendar c = Calendar.getInstance();
         for(int i=0;i<31;i++) {
-            if (selectedDays[i]){
+            if (selectedDays.get(i)){
 //            Log.d("datelog",String.format(" dayofweek=%d",dayOfWeek));
                 c.set(Calendar.DAY_OF_MONTH,i+1);
 //                Log.d("datelog",String.format("Calendar.DAY_OF_WEEK=%d",c.get(Calendar.DAY_OF_WEEK)));
@@ -213,7 +216,7 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
                     calendarView2.selectDate(c.getTime());
                     dayCount++;
                 }
-                else selectedDays[i] = false;
+                else selectedDays.set(i,false);
             }
         }
         textviewDayNum.setText(String.valueOf(dayCount));
@@ -228,7 +231,7 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
         // update textview
         textviewDayNum.setText(String.valueOf(++dayCount));
         // update array
-        selectedDays[day-1] = true;
+        selectedDays.set(day-1,true);
     }
 
     @Override
@@ -238,7 +241,7 @@ public class NewRepeatDay extends AppCompatActivity implements CalendarPickerVie
         selectedDay.setTime(date);
         int day = selectedDay.get(Calendar.DAY_OF_MONTH);
         // update array
-        selectedDays[day-1] = false;
+        selectedDays.set(day-1,false);
         // update textview
         textviewDayNum.setText(String.valueOf(--dayCount));
     }

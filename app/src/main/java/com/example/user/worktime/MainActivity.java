@@ -73,27 +73,27 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         final int[] rsum = { 0 };
         final int[] total = { 0 };
         DatabaseReference mDatabase;
-        Calendar date = Calendar.getInstance();
+//        Calendar date = Calendar.getInstance();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Extradays");
-        ValueEventListener valueEventListener = mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int days,hours,wage;
-                for (DataSnapshot ds : dataSnapshot.getChildren()){
-                    days = Integer.valueOf(ds.child("Days").getValue().toString());
-                    hours = Integer.valueOf(ds.child("Hour").getValue().toString());
-                    wage = Integer.valueOf(ds.child("Wage").getValue().toString());
-                    extrasum[0] += (days*hours*wage);
-                }
-                ExtraMoney.setText(String.valueOf(extrasum[0]));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        mDatabase = FirebaseDatabase.getInstance().getReference("Extradays");
+//        ValueEventListener valueEventListener = mDatabase.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                int days,hours,wage;
+//                for (DataSnapshot ds : dataSnapshot.getChildren()){
+//                    days = Integer.valueOf(ds.child("Days").getValue().toString());
+//                    hours = Integer.valueOf(ds.child("Hour").getValue().toString());
+//                    wage = Integer.valueOf(ds.child("Wage").getValue().toString());
+//                    extrasum[0] += (days*hours*wage);
+//                }
+//                ExtraMoney.setText(String.valueOf(extrasum[0]));
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Offdays");
         ValueEventListener valueEventListener1 = mDatabase.addValueEventListener(new ValueEventListener() {
@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 //off = Integer.valueOf(OffMoney.getText().toString());
                 total[0] = rsum[0] + extrasum[0] - offsum[0];
                 TotalMoney.setText(String.valueOf(rsum[0] + extrasum[0] - offsum[0]));
+                ExtraMoney.setText(String.valueOf(rsum[0]));
             }
 
             @Override

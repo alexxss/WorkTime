@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class viewDetail extends AppCompatActivity
-        implements View.OnLongClickListener, AdapterView.OnItemClickListener, DialogInterface.OnClickListener{
+        implements AdapterView.OnItemClickListener, DialogInterface.OnClickListener{
     ListView listv;
     TextView textView;
     Button viewRepeat,viewExtra,viewOff;
@@ -35,11 +35,11 @@ public class viewDetail extends AppCompatActivity
         setContentView(R.layout.activity_view_detail);
         textView = (TextView) findViewById(R.id.textView);
         viewRepeat = (Button) findViewById(R.id.viewRepeat);
-        viewExtra = (Button) findViewById(R.id.viewExtra);
+//        viewExtra = (Button) findViewById(R.id.viewExtra);
         viewOff = (Button) findViewById(R.id.viewOff);
-        viewRepeat.setOnLongClickListener(this);
-        viewExtra.setOnLongClickListener(this);
-        viewOff.setOnLongClickListener(this);
+//        viewRepeat.setOnLongClickListener(this);
+//        viewExtra.setOnLongClickListener(this);
+//        viewOff.setOnLongClickListener(this);
         listv = (ListView) findViewById(R.id.listView);
         listv.setOnItemClickListener(this);
 
@@ -49,14 +49,14 @@ public class viewDetail extends AppCompatActivity
     protected void onResume(){
         super.onResume();
         if(dbRef == "RepeatDays") viewRepeatDetail(viewRepeat);
-        else if (dbRef == "Extradays") viewExtraDetail(viewExtra);
+//        else if (dbRef == "Extradays") viewExtraDetail(viewExtra);
         else if (dbRef == "Offdays") viewOffDetail(viewOff);
     }
 
 
     public void viewRepeatDetail(View v){
         key.clear();
-        textView.setText("排班詳情");
+        textView.setText("工作詳情");
         dbRef = "RepeatDays";
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
@@ -90,39 +90,39 @@ public class viewDetail extends AppCompatActivity
         //Toast.makeText(this,String.valueOf(key.size()),Toast.LENGTH_SHORT).show();
     }
 
-    public void viewExtraDetail(View v){
-        key.clear();
-        textView.setText("加班詳情");
-        dbRef = "Extradays";
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1);
-        listv.setAdapter(adapter);
-        DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference("Extradays");
-        adapter.clear();
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String toAdd="";
-                for (DataSnapshot ds : dataSnapshot.getChildren()){
-                    key.add(ds.getKey());
-                    toAdd += ds.child("Label").getValue().toString() + "，" + "天數：" + ds.child("Days").getValue().toString() + "\n\t\t"
-                            + "時數：" + ds.child("Hour").getValue().toString() + "小時，\t\t"
-                            + "時薪：" + ds.child("Wage").getValue().toString() + "元";
-
-                    adapter.add(toAdd);
-                    toAdd = "";
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    public void viewExtraDetail(View v){
+//        key.clear();
+//        textView.setText("加班詳情");
+//        dbRef = "Extradays";
+//        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_list_item_1,
+//                android.R.id.text1);
+//        listv.setAdapter(adapter);
+//        DatabaseReference mDatabase;
+//        mDatabase = FirebaseDatabase.getInstance().getReference("Extradays");
+//        adapter.clear();
+//        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                String toAdd="";
+//                for (DataSnapshot ds : dataSnapshot.getChildren()){
+//                    key.add(ds.getKey());
+//                    toAdd += ds.child("Label").getValue().toString() + "，" + "天數：" + ds.child("Days").getValue().toString() + "\n\t\t"
+//                            + "時數：" + ds.child("Hour").getValue().toString() + "小時，\t\t"
+//                            + "時薪：" + ds.child("Wage").getValue().toString() + "元";
+//
+//                    adapter.add(toAdd);
+//                    toAdd = "";
+//                }
+//                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     public void viewOffDetail(View v){
         key.clear();
@@ -158,30 +158,30 @@ public class viewDetail extends AppCompatActivity
         });
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        if(v.getId() == R.id.viewRepeat)
-        {
-            Intent it = new Intent(this,NewRepeatDay.class);
-            it.putExtra("type","repeat");
-            startActivity(it);
-        }
-        else if (v.getId() ==  R.id.viewExtra)
-        {
-            Intent it = new Intent(this,NewExtraOff.class);
-            it.putExtra("title","新增加班");
-            it.putExtra("dbRef","Extradays");
-            startActivity(it);
-        }
-        else if (v.getId() ==  R.id.viewOff)
-        {
-            Intent it = new Intent(this,NewExtraOff.class);
-            it.putExtra("title","新增請假");
-            it.putExtra("dbRef","Offdays");
-            startActivity(it);
-        }
-        return false;
-    }
+//    @Override
+//    public boolean onLongClick(View v) {
+//        if(v.getId() == R.id.viewRepeat)
+//        {
+//            Intent it = new Intent(this,NewRepeatDay.class);
+//            it.putExtra("type","repeat");
+//            startActivity(it);
+//        }
+//        else if (v.getId() ==  R.id.viewExtra)
+//        {
+//            Intent it = new Intent(this,NewExtraOff.class);
+//            it.putExtra("title","新增加班");
+//            it.putExtra("dbRef","Extradays");
+//            startActivity(it);
+//        }
+//        else if (v.getId() ==  R.id.viewOff)
+//        {
+//            Intent it = new Intent(this,NewExtraOff.class);
+//            it.putExtra("title","新增請假");
+//            it.putExtra("dbRef","Offdays");
+//            startActivity(it);
+//        }
+//        return false;
+//    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
