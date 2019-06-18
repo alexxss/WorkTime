@@ -13,6 +13,8 @@
   - Third party calendar widget: [Times Square Calendar](https://github.com/square/android-times-square)
   - Firebase
 
+APK: [here](https://github.com/alexxss/WorkTime/blob/master/app-debug.apk)
+
 ## 功能
 - 紀錄工作、請假資訊
 - 紀錄班表、時薪、時數
