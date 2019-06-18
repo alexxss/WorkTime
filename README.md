@@ -54,6 +54,6 @@
 <img src="https://github.com/alexxss/WorkTime/blob/master/screenshots/overview_clearall.gif" width="300"/>
 
 # Member
-蘇雨菲
-詹雅惠
-何允中
+- 蘇雨菲
+- 詹雅惠
+- 何允中
