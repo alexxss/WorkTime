@@ -1,9 +1,17 @@
 # WorkTime 
 
+| Member | Work Distribution |
+|:-:|:-:|
+| 蘇雨菲 P76075068 | 60% |
+| 詹雅惠 P76074410 | 20% |
+| 何允中 P76071323 | 20% |
+
 環境：  
-- min sdk 25  
+- compile sdk = 25  
 - File > Settings > Build > Instant Run > 取消勾選 `Enable Instant Run ...`  
-- 使用第三方日曆 [Times Square Calendar](https://github.com/square/android-times-square)
+- Tools / Libraries 
+  - Third party calendar widget: [Times Square Calendar](https://github.com/square/android-times-square)
+  - Firebase
 
 ## 功能
 - 紀錄工作、請假資訊
@@ -28,16 +36,18 @@
   - 新增
   
 ## 新增工作
-<img src="https://github.com/alexxss/WorkTime/blob/master/screenshots/schedule.gif" width="300"/>
-- 可以選擇每個星期重複  
-- 單擊日曆可以選取/取消(可多選)  
-- 標籤  
+<img src="https://github.com/alexxss/WorkTime/blob/master/screenshots/schedule.gif" width="300"/>  
+
+- 可以選擇每個星期重複
+- 單擊日曆可以選取/取消(可多選)
+- 標籤
 - 天數(自動判斷)
-- 時薪  
-- 時數  
+- 時薪
+- 時數
 
 ## 新增請假
 <img src="https://github.com/alexxss/WorkTime/blob/master/screenshots/off.gif" width="300"/>
+
 - 單擊日曆可以選取/取消 (可多選)
 - 標籤  
 - 天數(自動判斷)
@@ -52,8 +62,3 @@
 ### 清除資訊
 首頁點擊`開始新的一月`  
 <img src="https://github.com/alexxss/WorkTime/blob/master/screenshots/overview_clearall.gif" width="300"/>
-
-# Member
-- 蘇雨菲
-- 詹雅惠
-- 何允中
