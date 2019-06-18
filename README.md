@@ -52,3 +52,8 @@
 ### 清除資訊
 首頁點擊`開始新的一月`  
 <img src="https://github.com/alexxss/WorkTime/blob/master/screenshots/overview_clearall.gif" width="300"/>
+
+# Member
+蘇雨菲
+詹雅惠
+何允中
